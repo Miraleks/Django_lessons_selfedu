@@ -27,6 +27,8 @@ class WomenAdmin(admin.ModelAdmin):
     # exclude = ['tags', 'is_published']
     readonly_fields = ['slug', ]
     filter_horizontal = ['tags', ]
+
+    # поля, отображаемые в админ-панели
     list_display = (
         # 'id',
         'title',
@@ -36,20 +38,34 @@ class WomenAdmin(admin.ModelAdmin):
         'brief_info'
 
     )
+
+    # кликабельные поля (напр. для редактирования записи)
     list_display_links = (
         # 'id',
         'title',
     )
+
+    # порядок сортировки при отображении в админ-панели (не путать с Meta в модели)
     ordering = (
         'date_created',
         'title',
     )
+
+    # список редактируемых полей
+    # (при добавлении в этот список кликабельного поля будет ошибка)
     list_editable = ('is_published',)
+
+    # пагинация списка
     list_per_page = 10
+
+    # подключение действий (функций)
     actions = ['set_published', 'set_draft', ]
-    search_fields = ['title', 'cat__name']
+
+    # список полей для поиска
+    search_fields = ['title', 'cat__name']    # cat__name - подключение поля связанной таблицы
     list_filter = [MarriedFilter, 'cat__name', 'is_published']
 
+    # метод для отображения пользовательских полей
     @admin.display(description='Краткое описание', ordering='content')
     def brief_info(self, women: Women):
         return f'Описание {len(women.content)} символов.'
